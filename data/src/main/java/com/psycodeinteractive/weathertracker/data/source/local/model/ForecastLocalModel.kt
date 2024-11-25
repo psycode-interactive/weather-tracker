@@ -8,5 +8,5 @@ sealed interface ForecastLocalModel {
     @Serializable
     data object Empty : ForecastLocalModel
     @Serializable
-    data class Forecast(val forecastDataModel: ForecastDataModel) : ForecastLocalModel
+    data class Forecast(val forecast: ForecastDataModel) : ForecastLocalModel
 }

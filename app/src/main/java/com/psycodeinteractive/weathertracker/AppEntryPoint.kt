@@ -12,8 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
 import androidx.navigation.navigation
 import com.psycodeinteractive.weathertracker.presentation.WeatherAppGraphRoute
+import com.psycodeinteractive.weathertracker.presentation.feature.forecast.forecastScreenRoute
 
 @Composable
 fun AppEntryPoint(
@@ -34,25 +36,15 @@ fun AppEntryPoint(
             startDestination = WeatherAppGraphRoute.Root,
             contentAlignment = Alignment.TopStart
         ) {
-            weatherGraph(
-                navController = navController,
-            )
+            weatherGraph()
         }
     }
 }
 
-fun NavGraphBuilder.weatherGraph(
-    navController: NavHostController
-) {
+fun NavGraphBuilder.weatherGraph() {
     navigation<WeatherAppGraphRoute.Root>(
         startDestination = WeatherAppGraphRoute.Forecast,
     ) {
-        userListScreenRoute(
-            onNavigateToAddUser = navController::navigateToAddUser
-        )
-        addUserScreenRoute(
-            navController = navController,
-            onNavigateUp = navController::popBackStack
-        )
+        forecastScreenRoute()
     }
 }

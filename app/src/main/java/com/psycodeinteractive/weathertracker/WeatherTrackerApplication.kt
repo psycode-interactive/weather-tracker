@@ -1,7 +1,6 @@
 package com.psycodeinteractive.weathertracker
 
 import android.app.Application
-import com.squareup.leakcanary.core.BuildConfig
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 

@@ -10,7 +10,7 @@ abstract class BaseViewModel<State : ViewState> : ViewModel() {
     private val _viewState by lazy { MutableStateFlow(initialViewState) }
     val viewState by lazy { _viewState.asStateFlow() }
 
-    abstract val initialViewState: State
+    protected abstract val initialViewState: State
 
     protected fun updateViewState(update: (lastState: State) -> State) {
         _viewState.update(update)

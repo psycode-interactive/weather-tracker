@@ -55,6 +55,7 @@ android {
                     freeCompilerArgs.addAll(
                         listOf(
                             "-opt-in=kotlinx.serialization.InternalSerializationApi",
+                            "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
                         )
                     )
                 }
@@ -79,6 +80,8 @@ dependencies {
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
     ksp(libs.hilt.compiler.android)
+
+    implementation(libs.timber)
 
     testImplementation(projects.testUtils)
 }

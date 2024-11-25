@@ -65,6 +65,9 @@ dependencies {
     api(libs.compose.material3)
     api(libs.compose.ui.tooling)
 
+    implementation(libs.coil.compose)
+    implementation(libs.coil.okhttp)
+
     implementation(libs.kotlin.serialization.json)
 
     implementation(libs.hilt)

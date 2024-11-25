@@ -3,14 +3,19 @@ package com.psycodeinteractive.weathertracker.data.di
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStoreFile
 import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.chuckerteam.chucker.api.RetentionManager
+import com.psycodeinteractive.weathertracker.data.BuildConfig
 import com.psycodeinteractive.weathertracker.data.NetworkConstants.BASE_URL
 import com.psycodeinteractive.weathertracker.data.network.interceptor.ErrorInterceptor
+import com.psycodeinteractive.weathertracker.data.repository.ForecastDataRepository
 import com.psycodeinteractive.weathertracker.data.source.local.DataStoreSerializer
 import com.psycodeinteractive.weathertracker.data.source.local.model.ForecastLocalModel
+import com.psycodeinteractive.weathertracker.data.source.remote.ForecastApiService
+import com.psycodeinteractive.weathertracker.domain.repository.ForecastRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,6 +37,17 @@ private const val apiKeyFieldName = "key"
 @Module
 @InstallIn(SingletonComponent::class)
 internal object DataModule {
+
+    @Provides
+    fun providesForecastRepository(
+        forecastApiService: ForecastApiService,
+        dataStore: DataStore<ForecastLocalModel>,
+        ioDispatcher: CoroutineDispatcher
+    ): ForecastRepository = ForecastDataRepository(
+        forecastApiService = forecastApiService,
+        dataStore = dataStore,
+        ioDispatcher = ioDispatcher
+    )
 
     @Provides
     @Singleton
@@ -82,12 +98,20 @@ internal object DataModule {
 
     @Provides
     @Singleton
+    fun providesForecastApiService(
+        retrofit: Retrofit
+    ): ForecastApiService = retrofit.create(ForecastApiService::class.java)
+
+    @Provides
+    @Singleton
     fun providesJson(): Json = Json {
         ignoreUnknownKeys = true
         encodeDefaults = true
         explicitNulls = false
     }
 
+    @Provides
+    @Singleton
     fun providesForecastDataStore(
         @ApplicationContext applicationContext: Context,
         scope: CoroutineScope,
@@ -101,7 +125,8 @@ internal object DataModule {
                 ForecastLocalModel.serializer(),
                 ForecastLocalModel.Empty
             ),
-            scope = CoroutineScope(scope.coroutineContext + ioDispatcher)
+            scope = CoroutineScope(scope.coroutineContext + ioDispatcher),
+            corruptionHandler = ReplaceFileCorruptionHandler { ForecastLocalModel.Empty }
         )
     }
 }

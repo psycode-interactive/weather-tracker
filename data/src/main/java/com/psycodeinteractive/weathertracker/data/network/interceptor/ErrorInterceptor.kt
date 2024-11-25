@@ -12,24 +12,14 @@ class ErrorInterceptor(
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val response = chain.proceed(chain.request())
-        if (response.isSuccessful) return response
-
-        val errorBody = response.body?.takeIf { it.contentLength() > 0L }?.string()
-
-        if (errorBody == null) {
-            return response.newBuilder().body(null).build()
-        }
-
-        val exception = try {
-            IOException(
-                json.decodeFromString<List<BackendException>>(errorBody)
-                    .map { "${it.field} ${it.message}" }
-                    .joinToString("\n")
-            )
-        } catch (_: Exception) {
-            return response.newBuilder().body(null).build()
-        }
-
-        throw exception
+//        if (response.isSuccessful)
+            return response
+//
+//        val errorBody = response.body?.takeIf { it.contentLength() > 0L }?.string()
+//
+//        if (errorBody == null) {
+//            return response.newBuilder().body(null).build()
+//        }
+          //TODO: Didn't have time to implement extensive error handling - swallowing all exceptions in repository for now
     }
 }

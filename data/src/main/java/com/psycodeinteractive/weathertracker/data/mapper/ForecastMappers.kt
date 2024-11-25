@@ -30,6 +30,26 @@ fun LocationDataModel.toDomain() = LocationDomainModel(
 )
 
 fun ConditionDataModel.toDomain() = ConditionDomainModel(
-    text = text,
+    icon = "https:$icon",
+)
+
+fun ForecastDomainModel.toData() = ForecastDataModel(
+    location = location.toData(),
+    weather = weather.toData(),
+)
+
+fun WeatherDomainModel.toData() = WeatherDataModel(
+    tempC = temperatureCelsius,
+    condition = condition.toData(),
+    humidity = humidity,
+    uv = uv,
+    feelslikeC = feelsLikeCelsius
+)
+
+fun LocationDomainModel.toData() = LocationDataModel(
+    name = name
+)
+
+fun ConditionDomainModel.toData() = ConditionDataModel(
     icon = icon,
 )
